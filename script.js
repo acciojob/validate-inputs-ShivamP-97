@@ -1,35 +1,36 @@
 // Validation patterns
 const patterns = {
-  name: /^[A-Za-z]{3,}$/,
-  email: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/,
-  mobile: /^[0-9]{10}$/
+  name: /^[A-Za-z]{3,}$/,                        // letters only, min 3
+  email: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/, // valid email
+  mobile: /^[0-9]{10}$/                          // exactly 10 digits
 };
 
 // Get input elements
-const inputs = [
-  document.getElementById('name'),
-  document.getElementById('email'),
-  document.getElementById('mobile')
-];
+const nameInput = document.getElementById('name');
+const emailInput = document.getElementById('email');
+const mobileInput = document.getElementById('mobile');
+
+const inputs = [nameInput, emailInput, mobileInput];
 
 // Initialize background to white
-inputs.forEach(input => {
-  input.style.backgroundColor = 'white';
-});
+inputs.forEach(input => input.style.backgroundColor = 'white');
 
-// Validate input function
-function validate(input, pattern) {
-  if (pattern.test(input.value)) {
-    input.style.backgroundColor = 'lightgreen'; // valid
-  } else if (input.value === "") {
-    input.style.backgroundColor = 'white';      // empty field
+// Validation function
+function validateInput(input, pattern) {
+  if (input.value === "") {
+    input.style.backgroundColor = 'white'; // empty field
+  } else if (pattern.test(input.value)) {
+    input.style.backgroundColor = 'lightgreen'; // valid input
   } else {
-    input.style.backgroundColor = 'pink';       // invalid
+    input.style.backgroundColor = 'pink';       // invalid input
   }
 }
 
-// Add event listeners for each input
+// Attach input listeners
 inputs.forEach(input => {
   const pattern = patterns[input.id];
-  input.addEventListener('input', () => validate(input, pattern));
+  input.addEventListener('input', () => validateInput(input, pattern));
+  
+  // Trigger validation on page load in case Cypress fills in invalid input first
+  validateInput(input, patterns[input.id]);
 });
